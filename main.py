@@ -17,6 +17,8 @@ supabase: Client = None
 
 if url and key:
     supabase = create_client(url, key)
+else:
+    print("WARNING: SUPABASE_URL or SUPABASE_KEY not found in environment variables.")
 
 app = FastAPI(title="Sports Fandom Social Layer")
 
