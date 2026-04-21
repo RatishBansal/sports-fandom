@@ -53,18 +53,23 @@ class UpdatePrefReq(BaseModel):
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     teams, matches = [], []
-    if supabase:
-        try:
-            teams_resp = supabase.table("teams").select("*").execute()
-            matches_resp = supabase.table("matches").select("*").execute()
-            teams = teams_resp.data
-            matches = matches_resp.data
-        except Exception as e:
-            print("Error fetching SSR data from Supabase:", e)
+    if not supabase:
+        print("ERROR: Supabase client is not initialized. Check SUPABASE_URL and SUPABASE_KEY.")
+        return templates.TemplateResponse(request=request, name="index.html", context={"teams": teams, "matches": matches, "error": "Backend not configured"})
+    
+    try:
+        teams_resp = supabase.table("teams").select("*").execute()
+        matches_resp = supabase.table("matches").select("*").execute()
+        teams = teams_resp.data
+        matches = matches_resp.data
+    except Exception as e:
+        print("Error fetching SSR data from Supabase:", e)
     return templates.TemplateResponse(request=request, name="index.html", context={"teams": teams, "matches": matches})
 
 @app.post("/api/register")
 async def register(req: RegisterReq):
+    if not supabase:
+        return {"status": "error", "message": "Backend not configured. SUPABASE_URL or SUPABASE_KEY missing."}
     try:
         resp = supabase.table("users").select("id").eq("username", req.username).execute()
         if len(resp.data) > 0:
@@ -82,6 +87,8 @@ async def register(req: RegisterReq):
 
 @app.post("/api/login")
 async def login(req: LoginReq):
+    if not supabase:
+        return {"status": "error", "message": "Backend not configured. SUPABASE_URL or SUPABASE_KEY missing."}
     try:
         resp = supabase.table("users").select("*").eq("username", req.username).eq("password_hash", req.password).execute()
         if len(resp.data) > 0:
@@ -94,6 +101,8 @@ async def login(req: LoginReq):
 
 @app.post("/api/update_preferences")
 async def update_preferences(req: UpdatePrefReq):
+    if not supabase:
+        return {"status": "error", "message": "Backend not configured."}
     try:
         supabase.table("users").update({"favorite_team_ids": req.favorite_teams}).eq("username", req.username).execute()
         return {"status": "success"}
@@ -102,6 +111,8 @@ async def update_preferences(req: UpdatePrefReq):
 
 @app.get("/api/matches")
 async def get_matches():
+    if not supabase:
+        return {"matches": [], "teams": {}, "error": "Supabase client not initialized"}
     try:
         matches_resp = supabase.table("matches").select("*").execute()
         teams_resp = supabase.table("teams").select("*").execute()
@@ -113,6 +124,8 @@ async def get_matches():
 
 @app.get("/api/chat/{match_id}")
 async def get_chat(match_id: str):
+    if not supabase:
+        return {"comments": [], "error": "Backend not configured"}
     try:
         resp = supabase.table("comments").select("*").eq("match_id", match_id).order("timestamp", desc=False).execute()
         comments = resp.data
@@ -140,6 +153,8 @@ async def get_chat(match_id: str):
 
 @app.post("/api/chat")
 async def post_comment(req: CommentReq):
+    if not supabase:
+        return {"status": "error", "message": "Backend not configured"}
     try:
         new_comment = {
             "id": "c_" + str(uuid.uuid4())[:8],
@@ -158,6 +173,8 @@ async def post_comment(req: CommentReq):
 
 @app.post("/api/react")
 async def react_comment(req: ReactionReq):
+    if not supabase:
+        return {"status": "error", "message": "Backend not configured"}
     try:
         resp = supabase.table("comments").select("reactions").eq("id", req.comment_id).execute()
         if not resp.data:
