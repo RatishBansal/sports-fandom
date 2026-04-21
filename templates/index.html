@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FanVerse - Sports Fandom Hub</title>
+    <meta name="description" content="Engage, React, and Discuss all matches of your favorite cricket teams in real-time.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css?v=1.1">
+</head>
+<body class="bg-auth">
+    <!-- Auth Overlay -->
+    <div id="authOverlay" class="onboarding-overlay" style="display: none;">
+        <div class="onboarding-modal" style="max-width: 400px; padding: 30px;">
+            <h1 id="authTitle" style="font-size: 2rem;">Login</h1>
+            <p style="margin-bottom: 20px; font-size: 1rem;" id="authDesc">Enter your credentials to continue</p>
+            <input type="text" id="authUsername" placeholder="Username" style="width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid var(--panel-border); background: var(--glass-bg); color: #fff; font-size: 1rem; outline: none;">
+            <input type="password" id="authPassword" placeholder="Password" style="width: 100%; padding: 14px; margin-bottom: 20px; border-radius: 10px; border: 1px solid var(--panel-border); background: var(--glass-bg); color: #fff; font-size: 1rem; outline: none;">
+            
+            <button id="authSubmitBtn" style="width: 100%; font-size: 1.1rem; font-weight: 700; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 16px; transition: 0.2s;">Login</button>
+            <p id="authSwitchText" style="font-size: 0.95rem; cursor: pointer; opacity: 0.8;">Don't have an account? <span style="color: var(--accent); font-weight: bold;">Register</span></p>
+            <div id="authErrorMsg" style="color: var(--danger); font-size: 0.9rem; margin-top: 15px; display: none;"></div>
+        </div>
+    </div>
+    <!-- Onboarding / Team Selection Overlay -->
+    <div id="onboarding" class="onboarding-overlay" style="display: none;">
+        <div class="onboarding-modal">
+            <h1>Welcome to FanVerse</h1>
+            <p>Select your favorite teams to personalize your match feed and join the inner circle.</p>
+            <div class="teams-grid" id="teamsGrid" style="margin-bottom: 24px;">
+                <!-- Teams injected via JS -->
+            </div>
+            <button id="finishOnboardingBtn" class="change-btn" style="display:none; font-size: 1.1rem; padding: 12px 30px; background: var(--accent); color: white; border: none; border-radius: 14px; margin-top: 10px;">Continue</button>
+        </div>
+    </div>
+
+    <!-- Main App Layout -->
+    <div class="app-container" id="appContainer" style="display: none;">
+        
+        <!-- Left Sidebar: Team Details -->
+        <nav class="sidebar">
+            <div class="logo">
+                <span class="icon">🏟️</span>
+                <span>FanVerse</span>
+            </div>
+            
+            <div class="my-team">
+                <p>Your Favorite Team</p>
+                <div class="team-card" id="myTeamCard">
+                    <!-- Populated by JS -->
+                </div>
+                <button id="changeTeamBtn" class="change-btn">Change Team</button>
+            </div>
+
+            <div class="user-profile">
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 8px;">Playing as</p>
+                <div class="user-badge">
+                    <span class="user-avatar" id="userAvatar">🧑‍💻</span>
+                    <span id="userNameDisplay" style="font-weight: 600;">Fan</span>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Middle Feed: Matches -->
+        <main class="feed">
+            <header>
+                <h2>Match Center</h2>
+                <p style="color: var(--text-muted); margin-top: 5px;">Live updates & scheduled fixtures</p>
+            </header>
+            <div class="matches-list" id="matchesList">
+                <!-- Populated by JS -->
+            </div>
+        </main>
+        
+        <!-- Right Sidebar: Chat & Discussions -->
+        <aside class="chat-sidebar" id="chatSidebar">
+            <!-- Mobile Close Button -->
+            <button id="closeChatBtn" class="close-chat-btn" style="display: none;">&times;</button>
+            
+            <div class="chat-placeholder" id="chatPlaceholder">
+                <span class="emoji">💬</span>
+                <p>Select a match to join the realtime conversation</p>
+            </div>
+            
+            <div class="chat-container" id="chatContainer" style="display: none;">
+                <div class="chat-header">
+                    <h3 id="chatMatchTitle">Match Details</h3>
+                    <p id="chatMatchStatus">Status</p>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be injected here -->
+                </div>
+                
+                <div class="reply-indicator" id="replyIndicator" style="display: none;">
+                    <span>Replying to <span id="replyToUser" style="color:#090a0f;">User</span></span>
+                    <span id="cancelReply" onclick="cancelReply()" style="font-size:1.5rem; line-height: 1;">&times;</span>
+                </div>
+                
+                <div class="chat-input-area">
+                    <input type="text" id="chatInput" placeholder="Add to the discussion...">
+                    <button id="sendBtn">Send</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="/static/js/main.js?v=1.1"></script>
+</body>
+</html>

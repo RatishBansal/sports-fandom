@@ -1,0 +1,10 @@
+venv/
+__pycache__/
+*.db
+.env
+.git/
+Dockerfile
+.dockerignore
+update_logos.py
+add_teams.py
+init_supabase.py
